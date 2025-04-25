@@ -7,19 +7,31 @@ FROM debian:bookworm AS extractor
 # Using --no-install-recommends to try and minimize size.
 RUN apt-get update && \
   # Also install the kernel image needed by libguestfs/supermin.
-  apt-get install --no-install-recommends -y libguestfs-tools linux-image-amd64 curl && \
+  apt-get install --no-install-recommends -y libguestfs-tools linux-image-amd64 curl unzip && \
   # Clean up apt cache
   rm -rf /var/lib/apt/lists/*
 
 # Argument for the disk image path relative to the build context
-ARG IMG_PATH=./image.img
+ARG IMG_PATH=https://solar-assistant.io/sites/download/release?arch=rpi64
 # Argument for the partition number to extract (defaulting to 2)
 # guestfish typically enumerates disks as /dev/sda, /dev/sdb, etc.
 # and partitions as /dev/sda1, /dev/sda2, etc.
 ARG PARTITION_NUM=2
 
-# Add the disk image (local path or URL) into the build stage
-ADD ${IMG_PATH} /image.img
+# Download and extract the disk image
+RUN echo "Downloading image from ${IMG_PATH}..." && \
+    mkdir -p /tmp/img_download && \
+    curl -L "${IMG_PATH}" -o /tmp/img_download/image.zip && \
+    echo "Unzipping image..." && \
+    unzip /tmp/img_download/image.zip -d /tmp/img_download && \
+    # Find the .img file (handle potential variations in naming)
+    IMG_FILE=$(find /tmp/img_download -maxdepth 1 -name '*.img' -print -quit) && \
+    if [ -z "$IMG_FILE" ]; then echo "Error: No .img file found in downloaded archive."; exit 1; fi && \
+    echo "Found image file: $IMG_FILE" && \
+    mv "$IMG_FILE" /image.img && \
+    echo "Cleaning up download..." && \
+    rm -rf /tmp/img_download && \
+    echo "Image ready at /image.img"
 
 # Create the directory to hold the extracted root filesystem
 RUN mkdir /extracted_rootfs
