@@ -1,7 +1,5 @@
 # Solar Assistant Docker Image Builder
 
-[![Docker Build Status](https://img.shields.io/docker/build/your_dockerhub_username/solar-assistant.svg)](https://hub.docker.com/r/your_dockerhub_username/solar-assistant/) <!-- Optional: Update if you publish to Docker Hub -->
-
 ## What is this?
 
 This repository contains a `Dockerfile` specifically designed to download the official Solar Assistant disk image (for Raspberry Pi 64-bit), extract its filesystem, and package it into a minimal Docker container.
