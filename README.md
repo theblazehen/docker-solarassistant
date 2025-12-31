@@ -38,3 +38,9 @@ This allows you to run the Solar Assistant software within a Docker environment.
 *   **Not a Full VM:** This runs the Solar Assistant filesystem in a container, not a full virtual machine. It uses your host's Linux kernel.
 *   **Hardware Access:** You *must* pass through the necessary hardware devices (like USB serial converters for inverters/batteries) using `--device` flags for Solar Assistant to function correctly.
 *   **`systemctl` Replacement:** The included `systemctl` replacement mimics systemd but isn't identical. Most standard Solar Assistant services should work, but complex service interactions might behave differently.
+
+## License
+
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+
+See the [LICENSE](LICENSE) file for details.
